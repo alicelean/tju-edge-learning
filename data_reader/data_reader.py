@@ -26,6 +26,7 @@ def get_data(dataset, total_data, dataset_file_path=os.path.dirname(__file__), s
         else:
             start_index_train = (sim_round * total_data_train) % (max(1, 60000 - total_data_train + 1))
             start_index_test = (sim_round * total_data_test) % (max(1, 10000 - total_data_test + 1))
+            print("---------sim_round is:",sim_round,"start_index_test is:",start_index_train,"start_index_test is:",start_index_test)
 
         train_image, train_label = mnist_extract(start_index_train, total_data_train, True, dataset_file_path)
         test_image, test_label = mnist_extract(start_index_test, total_data_test, False, dataset_file_path)
