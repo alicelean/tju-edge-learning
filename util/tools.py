@@ -1,6 +1,6 @@
 
 # -*- coding:utf-8 -*-
-from all.models.get_model import get_model
+from models.get_model import get_model
 import numpy as np
 import result_value.value as gl
 def createmodel(model_name,step_size):
@@ -56,7 +56,7 @@ def get_final_w(use_min_loss,w_global_min_loss,w_global):
 
 
 
-def init_paramas(w_global_init,tau_setup):
+def init_paramas(w_global_init,tau):
     '''
 
     :param w_global_init:
@@ -76,16 +76,9 @@ def init_paramas(w_global_init,tau_setup):
     loss_min = np.inf
     # 前一次全局的最小损失值
     prev_loss_is_min = False
-    # 当本地更新次数小于0的时候进行动态调整，设置本地更新次数为1
-    if tau_setup < 0:
-        is_adapt_local = True
-        tau_config = 1
-    else:
-        # 否则的话不是动态调整本地更新次数那么按照tau_setup来进行下一次本地聚合
-        is_adapt_local = False
-        tau_config = tau_setup
+    tau_config = tau
 
-    return w_global,w_global_min_loss,loss_min,prev_loss_is_min,is_adapt_local,tau_config
+    return w_global,w_global_min_loss,loss_min,prev_loss_is_min,False,tau_config
 
 def init_learning_paramas():
     # time_global_aggregation_all开始记录所有的数据
@@ -180,3 +173,21 @@ def init_local_data():
     loss_w_prev_min_loss_list=[]
 
 
+def client_revinit_mag(msg):
+    '''
+    ['MSG_INIT_SERVER_TO_CLIENT', model_name, dataset,minibatch, step_size,
+                       batch_size, total_data, indices_each_node[node_i],
+                       use_min_loss]
+    :param msg:
+    :return:
+    '''
+    model_name = msg[1]
+    dataset = msg[2]
+    minmatch = msg[3]
+    step_size = msg[4]
+    batch_size = msg[5]
+    total_data = msg[6]
+    indices_this_node = msg[7]
+    use_min_loss = msg[8]
+    node_num= msg[9]
+    return model_name,dataset,minmatch,step_size,batch_size,total_data,indices_this_node,use_min_loss,node_num

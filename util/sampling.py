@@ -13,7 +13,6 @@ class MinibatchSampling:
         self.array = copy.deepcopy(array)   # So that the original array won't be changed
         self.batch_size = batch_size
         self.start_index = 0
-
         self.rnd_seed = (sim + 1) * 1000
         np.random.RandomState(seed=self.rnd_seed).shuffle(self.array)
 

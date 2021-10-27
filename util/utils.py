@@ -1,7 +1,7 @@
 import numpy as np
 import pickle, struct, socket, math
-
-
+import pandas as pd
+import result_value.value as gl
 def get_even_odd_from_one_hot_label(label):
     for i in range(0, len(label)):
         if label[i] == 1:
@@ -35,7 +35,7 @@ def send_msg(sock, msg):
     msg_pickle = pickle.dumps(msg)
     sock.sendall(struct.pack(">I", len(msg_pickle)))
     sock.sendall(msg_pickle)
-    print(msg[0], 'sent to', sock.getpeername())
+   # print(msg[0], 'sent to', sock.getpeername())
 
 
 def recv_msg(sock, expect_msg_type=None):
@@ -48,7 +48,7 @@ def recv_msg(sock, expect_msg_type=None):
     msg_len = struct.unpack(">I", sock.recv(4))[0]
     msg = sock.recv(msg_len, socket.MSG_WAITALL)
     msg = pickle.loads(msg)
-    print(msg[0], 'received from', sock.getpeername())
+    #print(msg[0], 'received from', sock.getpeername())
 
     if (expect_msg_type is not None) and (msg[0] != expect_msg_type):
         raise Exception("Expected " + expect_msg_type + " but received " + msg[0])
@@ -119,3 +119,67 @@ def get_indices_each_node_case(n_nodes, maxCase, label_list):
         indices_each_node_case[3][tmp_target_node].append(i)
 
     return indices_each_node_case
+
+
+def get_case_1(n_nodes, label_list):
+    '''
+    随机放置各个节点数据
+    :param n_nodes:
+    :param label_list:
+    :return:
+    '''
+    case = []
+    df=pd.DataFrame(columns=["node_i","datalength"])
+    for i in range(0, n_nodes):
+        case.append([])
+    for i in range(0, len(label_list)):
+        node_i=i % n_nodes
+        case[node_i].append(i)
+    for node_i in range(0, n_nodes):
+        print("node",node_i," data len is :",len(case[node_i]))
+        df.loc[len(df)+1]=[node_i,len(case[node_i])]
+    df.to_csv(gl.PATH+"datacase.csv")
+    return case
+
+
+def get_case_2(n_nodes, label_list):
+    '''
+    有偏的放置一些数据
+    :param n_nodes:
+    :param label_list:
+    :return:
+    '''
+    case= []
+    #初始化
+    for i in range(0, n_nodes):
+        case[i].append([])
+
+    for i in range(0, len(label_list)):
+        if label_list[i]==7 or label_list[i]==3:
+            case[0].append(i)
+        elif label_list[i]==0 or label_list[i]==4:
+            case[1].append(i)
+        else:
+            case[(i % n_nodes)].append(i)
+    return case
+
+
+def get_case_3(n_nodes, label_list):
+    '''
+    随机放置各个节点数据
+    :param n_nodes:
+    :param label_list:
+    :return:
+    '''
+    case = []
+    df=pd.DataFrame(columns=["node_i","datalength"])
+    for i in range(0, n_nodes):
+        case.append([])
+    for i in range(0, len(label_list)):
+        node_i=i % n_nodes
+        case[node_i].append(i)
+    for node_i in range(0, n_nodes):
+        print("node",node_i," data len is :",len(case[node_i]))
+        df.loc[len(df)+1]=[node_i,len(case[node_i])]
+    df.to_csv(gl.PATH+"datacase.csv")
+    return case

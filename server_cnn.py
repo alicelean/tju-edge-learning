@@ -6,8 +6,9 @@ import pandas as pd
 from util.utils import *
 from util.tools import *
 from config import *
-from plot.methods import *
-model=createmodel(model_name,step_size)
+dataset = 'MNIST_ORIG_ALL_LABELS'
+control_param_phi = 0.00005
+model=createmodel("ModelCNNMnist",step_size)
 n_nodes=5
 #建立网络通信
 listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,9 +31,8 @@ indices_each_node= get_case_1(n_nodes,train_label_orig)
 df = pd.DataFrame(columns=['sim','case','loss','accracy'])
 #本地更新运行频率
 #tau_list=[3,5,10,20,30,40,50,80,100,120,180,220,260,320]
-tau_list=[600]
-#total_time,5,10,30,50,100
-total_time=50
+tau_list=[30]
+total_time=10
 minibatch=3
 
 for tau in tau_list:
@@ -98,18 +98,20 @@ for tau in tau_list:
                 data_size_local=data_size_local_all[i]
                 rate=float(data_size_local)/float(datalength)
                 w_global=w_global+w_local*rate
-                print(w_local)
+                print(w_global)
             if True in np.isnan(w_global):
-                w_global = w_global_prev
-                last_is_nan = True
+                w_global=w_global_prev
+                last_is_nan=True
+
             actual_times=actual_times+max_local_time
             if actual_times>total_time:
                 is_last_round=True
+
     w_eval=w_global
     loss_final = model.loss(train_image, train_label, w_eval)
     accuracy_final = model.accuracy(test_image, test_label, w_eval)
-    redf = pd.DataFrame(columns=["method","n_nodes","total_time","minibatch","iter_times", "tau", "loss", "accuracy"])
-    redf.loc[len(redf)+1]=["FedAvg",n_nodes,total_time,minibatch,iter_times,tau,loss_final,accuracy_final]
+    redf = pd.DataFrame(columns=["method","n_nodes","total_time","minibatch","iter_times", "tau", "loss", "accuracy","last_is_nan"])
+    redf.loc[len(redf)+1]=["FedAvg",n_nodes,total_time,minibatch,iter_times,tau,loss_final,accuracy_final,last_is_nan]
     redf.to_csv(gl.PATH+'case_1.csv', mode='a', header=False)
 
 

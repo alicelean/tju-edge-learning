@@ -26,7 +26,7 @@ def get_data(dataset, total_data, dataset_file_path=os.path.dirname(__file__), s
         else:
             start_index_train = (sim_round * total_data_train) % (max(1, 60000 - total_data_train + 1))
             start_index_test = (sim_round * total_data_test) % (max(1, 10000 - total_data_test + 1))
-            print("---------sim_round is:",sim_round,"start_index_test is:",start_index_train,"start_index_test is:",start_index_test)
+           # print("---------sim_round is:",sim_round,"start_index_test is:",start_index_train,"start_index_test is:",start_index_test)
 
         train_image, train_label = mnist_extract(start_index_train, total_data_train, True, dataset_file_path)
         test_image, test_label = mnist_extract(start_index_test, total_data_test, False, dataset_file_path)
@@ -92,3 +92,32 @@ def get_data_train_samples(dataset, samples_list, dataset_file_path=os.path.dirn
                         'also confirm that dataset name is correct.')
 
     return train_image, train_label
+
+
+'''
+获取minist数据
+'''
+def get_minist_data(dataset, total_data, dataset_file_path=os.path.dirname(__file__)):
+
+    if dataset == 'MNIST_ORIG_EVEN_ODD' or dataset == 'MNIST_ORIG_ALL_LABELS':
+        from data_reader.mnist_extractor import mnist_extract
+        total_data_train = total_data
+        total_data_test = 10000
+        start_index_train = 0
+        start_index_test = 0
+        train_image, train_label = mnist_extract(start_index_train, total_data_train, True, dataset_file_path)
+        test_image, test_label = mnist_extract(start_index_test, total_data_test, False, dataset_file_path)
+
+        # train_label_orig must be determined before the values in train_label are overwritten below
+        train_label_orig=[]
+        for i in range(0, len(train_label)):
+            label = get_index_from_one_hot_label(train_label[i])
+            train_label_orig.append(label[0])
+
+        if dataset == 'MNIST_ORIG_EVEN_ODD':
+            for i in range(0, len(train_label)):
+                train_label[i] = get_even_odd_from_one_hot_label(train_label[i])
+            for i in range(0, len(test_label)):
+                test_label[i] = get_even_odd_from_one_hot_label(test_label[i])
+
+    return train_image, train_label, test_image, test_label, train_label_orig
