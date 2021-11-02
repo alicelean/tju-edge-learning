@@ -79,6 +79,7 @@ for tau in tau_list:
             max_local_time = 0
             w_local_all = []
             data_size_local_all = []
+            grad_list=[]
             datalength = 0
             print("..................server msg have send , Waiting for the ", iter_times,
                   " local iteration at client..................................")
@@ -91,6 +92,8 @@ for tau in tau_list:
                 w_local_all.append(msg[1])
                 datalength+=msg[4]
                 data_size_local_all.append(msg[4])
+                #记录每个边缘节点的梯度
+                grad_list.append(msg[5])
             print("..................", iter_times," local iteration at client has finished..................................")
 
             for i  in range(len(w_local_all)):

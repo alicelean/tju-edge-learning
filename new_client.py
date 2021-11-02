@@ -61,6 +61,8 @@ try:
         time_local_start= time.time()
         last_is_nan=False
         w_local_prev=w_local
+        #记录grad
+        grad_list=[]
         while tau_actual<tau_config:
             sample_indices = sampler.get_next_batch()
             local_train_image, local_train_label = get_data_train_samples(dataset, sample_indices, dataset_file_path)
@@ -68,7 +70,7 @@ try:
             train_indices = range(0, min(batch_size, len(local_train_label)))
             tau_actual += 1
             grad = model.gradient(local_train_image, local_train_label, w_local, train_indices)
-
+            grad_list.append(grad)
             w_local = w_local - step_size * grad
             if True in np.isnan(w_local):
                 last_is_nan=True
@@ -82,7 +84,7 @@ try:
         time_local = time_local_end - time_local_start
         #计算准确率
         accuracy_local = model.accuracy(train_image, train_label, w_local)
-        msg = ['MSG_WEIGHT_TIME_SIZE_CLIENT_TO_SERVER', w_local, time_local, tau_actual, data_size_local]
+        msg = ['MSG_WEIGHT_TIME_SIZE_CLIENT_TO_SERVER', w_local, time_local, tau_actual, data_size_local,grad_list[0]]
         send_msg(sock, msg)
 
 

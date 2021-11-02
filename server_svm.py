@@ -32,6 +32,7 @@ indices_each_node = get_case_1(n_nodes, train_label_orig)
 time_list=[]
 for i in range(10, 1000, 10):
     time_list.append(i)
+time_list=[10]
 minibatch = 3
 for t_time in time_list:
     total_time = t_time
@@ -124,7 +125,7 @@ for t_time in time_list:
         redf = pd.DataFrame(columns=["method", "n_nodes", "total_time", "minibatch", "iter_times", "tau", "loss", "accuracy"])
         redf.loc[len(redf) + 1] = ["FedAvg", n_nodes, total_time, minibatch, iter_times, tau, loss_final,
                                    accuracy_final]
-        redf.to_csv(gl.PATH + 'case_3.csv', mode='a', header=False)
+        redf.to_csv(gl.PATH + 'case_4.csv', mode='a', header=False)
         print("------------------------------------------------end", str(t),"experiments-------------------------------------------------------------")
 
 
