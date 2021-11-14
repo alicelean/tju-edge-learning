@@ -17,32 +17,11 @@ from matplotlib import pyplot as plt
 # plt.ylabel('我是纵轴')
 # plt.show()
 
-def plot_dataset_case1():
-    train_image, train_label, test_image, test_label, train_label_orig = get_minist_data(dataset, total_data,dataset_file_path)
-    indices_each_node= get_case_1(n_nodes,train_label_orig)
-    for j in range(len(indices_each_node)):
-        y_list = np.zeros(10)
-        for i in indices_each_node[j]:
-           y_list[train_label_orig[i]]+=1
-        print(y_list)
-        plot_line(y_list,j)
 
-#结果绘图
-def different_time(time_list,DF):
-    for v in time_list:
-        s=DF[DF['total_time']==v]
-        title="total_time is "+str(v)
-        plt.title(title, fontsize=20)
-        #s.sort_index(axis=0,by='tau',ascending=True)
-        data=s[['tau','accuracy']]
-        plt.xlabel('each node local model update times')
-        plt.ylabel('global model accuracy')
-        x=data['tau'].tolist()
-        y=data['accuracy'].tolist()
-        plot_two(x,y)
 
-#数据分布绘图
-#plot_dataset_case1()
+
+
+
 #不同资源的绘制
 #DF=pd.read_csv(gl.PATH+'case_1.csv')
 # print(DF.head())
@@ -59,8 +38,37 @@ def different_time(time_list,DF):
 # different_time(time_list,DF2)
 
 
-DF2=pd.read_csv(gl.PATH+'case_4.csv')
+# DF2=pd.read_csv(gl.PATH+'case_4.csv')
+# colname=[column for column in DF2]
+# print(colname)
+# time_list=list(set(DF2['total_time'].tolist()))
+# different_time(time_list,DF2)
+
+#数据集绘制-------------------------
+#数据分布绘图case1
+# plot_dataset_case("case1")
+#数据分布绘图case2
+# plot_dataset_case("case2")
+#数据分布绘图case3
+# plot_dataset_case("case3")
+
+#-----------------------------------
+# case_type="case2"
+# casepath=gl.PATH +case_type+"_"+model_name+'_tau.csv'
+# DF2=pd.read_csv(casepath)
+# colname=[column for column in DF2]
+# print(colname)
+# #不同资源
+# time_list=list(set(DF2['total_time'].tolist()))
+# print(time_list)
+# different_time(time_list,DF2)
+
+case_type="case2"
+casepath=gl.PATH +case_type+"_"+model_name+'_tau.csv'
+DF2=pd.read_csv(casepath)
 colname=[column for column in DF2]
 print(colname)
+#不同资源
 time_list=list(set(DF2['total_time'].tolist()))
-different_time(time_list,DF2)
+print(time_list)
+different_time(case_type,model_name,time_list,DF2)

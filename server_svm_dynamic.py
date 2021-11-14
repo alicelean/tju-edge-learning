@@ -109,6 +109,7 @@ for t_time in time_list:
             max_local_time = 0
             w_local_all = []
             data_size_local_all = []
+            loss_list=[]
             datalength = 0
            # print("..................server msg have send , Waiting for the ", iter_times, " local iteration at client..................................")
             for node_i in range(0, n_nodes):
@@ -119,14 +120,19 @@ for t_time in time_list:
                     w_local_all.append(msg[1])
                     datalength += msg[4]
                     data_size_local_all.append(msg[4])
+                    loss_list.append(msg[5])
+
             print("..................", iter_times," local iteration at client has finished..................................")
-               #聚合
+            #聚合
             for i in range(len(w_local_all)):
                     w_local = w_local_all[i]
                     data_size_local = data_size_local_all[i]
                     rate = float(data_size_local) / float(datalength)
                     w_global = w_global + w_local * rate
                     #print(w_local)
+
+
+
             if True in np.isnan(w_global):
                     w_global = w_global_prev
                     last_is_nan = True

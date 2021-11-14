@@ -138,7 +138,7 @@ def get_case_1(n_nodes, label_list):
     for node_i in range(0, n_nodes):
         print("node",node_i," data len is :",len(case[node_i]))
         df.loc[len(df)+1]=[node_i,len(case[node_i])]
-    df.to_csv(gl.PATH+"datacase.csv")
+    df.to_csv(gl.PATH+"datacas1.csv")
     return case
 
 
@@ -152,7 +152,7 @@ def get_case_2(n_nodes, label_list):
     case= []
     #初始化
     for i in range(0, n_nodes):
-        case[i].append([])
+        case.append([])
 
     for i in range(0, len(label_list)):
         if label_list[i]==7 or label_list[i]==3:
@@ -166,20 +166,31 @@ def get_case_2(n_nodes, label_list):
 
 def get_case_3(n_nodes, label_list):
     '''
-    随机放置各个节点数据
+   有偏的放置数据
     :param n_nodes:
     :param label_list:
     :return:
     '''
     case = []
     df=pd.DataFrame(columns=["node_i","datalength"])
+    #初始化case
     for i in range(0, n_nodes):
         case.append([])
+    num=0
     for i in range(0, len(label_list)):
-        node_i=i % n_nodes
+        node_i=4
+        if label_list[i] == 2 or label_list[i] == 6:
+            node_i=0
+        elif label_list[i] == 0 or label_list[i] == 1:
+            node_i = 2
+        elif label_list[i] == 7 or label_list[i] == 9:
+            node_i = 3
+        else:
+            node_i = i % n_nodes
         case[node_i].append(i)
+
     for node_i in range(0, n_nodes):
         print("node",node_i," data len is :",len(case[node_i]))
         df.loc[len(df)+1]=[node_i,len(case[node_i])]
-    df.to_csv(gl.PATH+"datacase.csv")
+    df.to_csv(gl.PATH+"datacase3.csv")
     return case
