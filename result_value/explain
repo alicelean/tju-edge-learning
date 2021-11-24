@@ -1,0 +1,3 @@
+文件名称 casetype_modelname_tau.csv : minist数据集下不同的case对应的model,在tau不断变化的情况下，global accuracy的反应
+
+文件名称  casetype_type_distance.csv :记录minist数据集下不同的case对应与总体分布的分布差异。计算方式type

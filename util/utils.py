@@ -192,5 +192,6 @@ def get_case_3(n_nodes, label_list):
     for node_i in range(0, n_nodes):
         print("node",node_i," data len is :",len(case[node_i]))
         df.loc[len(df)+1]=[node_i,len(case[node_i])]
+    #print(df)
     df.to_csv(gl.PATH+"datacase3.csv")
     return case
