@@ -77,7 +77,8 @@ case_list=["case1","case2","case3"]
 # aggre_type="avg"
 # for case_type in case_list:
 #     plot_tau_accruacy(case_type,model_name,aggre_type)
-aggre_type="am"
+aggre_type="avg"
+model_name = 'ModelCNNMnist'
 for case_type in case_list:
     plot_tau_accruacy(case_type,model_name,aggre_type)
 #---------------------------------------------------------------------------

@@ -13,7 +13,7 @@ model_name = 'ModelCNNMnist'
 control_param_phi = 0.00005   # Good for CNN
 model = createmodel(model_name, step_size)
 n_nodes = 5
-case_type="case1"
+case_type="case2"
 aggre_type="avg"
 #redf = pd.DataFrame(columns=["method", "n_nodes", "total_time", "minibatch", "iter_times", "tau", "loss", "accuracy"])
 # 建立网络通信
@@ -52,7 +52,7 @@ for t_time in time_list:
     total_time = t_time
     tau_list =[]
     for i in range (5,1005,5):
-        if i <=0:
+        if i <=935:
             continue
         tau_list.append(i)
     print (tau_list)
