@@ -13,8 +13,35 @@ model_name = 'ModelCNNMnist'
 control_param_phi = 0.00005   # Good for CNN
 model = createmodel(model_name, step_size)
 n_nodes = 5
-case_type="case2"
+# case_type="case3"
+# aggre_type="disag"
+# dis_type='Euc'
+# nodew=get_wegiht(dis_type,case_type)
+
+mo_name='cnn/'
+
+# csvtype='tau'
+csvtype='time'
+case_type="case1"
+
+#1
+# dis_type='Js'
+# aggre_type="fedjs"
+# nodew=get_wegiht2(dis_type,case_type)
+
+# #2
+# dis_type='Js'
+# aggre_type="jsag"
+# nodew=get_wegiht2(dis_type,case_type)
+#
+#
+#3
 aggre_type="avg"
+#
+# #4
+# aggre_type="am"
+
+
 #redf = pd.DataFrame(columns=["method", "n_nodes", "total_time", "minibatch", "iter_times", "tau", "loss", "accuracy"])
 # 建立网络通信
 listening_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,24 +67,26 @@ elif case_type == "case2":
     indices_each_node = get_case_2(n_nodes, train_label_orig)
 elif case_type == "case3":
     indices_each_node = get_case_3(n_nodes, train_label_orig)
+elif case_type == "case4":
+    indices_each_node = get_case_4(n_nodes, train_label_orig)
+elif case_type == "case5":
+    indices_each_node = get_case_5(n_nodes, train_label_orig)
 
 # tau_list=[3,5,10,20,30,40,50,80,100,120,180,220,260,320]
 # total_time,5,10,30,50,100
-time_list=[]
-for i in range(10, 100000, 100):
-    time_list.append(i)
+# time_list=[]
+# for i in range(10, 100000, 1000):
+#     time_list.append(i)
 minibatch = 3
 time_list=[10]
 for t_time in time_list:
     total_time = t_time
     tau_list =[]
     for i in range (5,1005,5):
-        if i <=935:
-            continue
         tau_list.append(i)
-    print (tau_list)
     for t in range(len(tau_list)):
         tau=tau_list[t]
+        print(t_time,tau)
         # 本地更新运行频率
         # 统计对象的初始化,对模型的权重进行初始化
         print("------------------------------------------------start" ,str(t), "experiments-------------------------------------------------------------")
@@ -126,9 +155,13 @@ for t_time in time_list:
             #         rate = float(data_size_local) / float(datalength)
             #         w_global = w_global + w_local * rate
 
-            w_global = FedAvg(w_local_all, data_size_local_all, w_global, datalength)
+            #w_global = FedAvg(w_local_all, data_size_local_all, w_global, datalength)
                     #print(w_local)
             #w_global = AM(w_local_all, w_global)
+            #w_global=DisAg(nodew, w_global, w_local_all)
+            #w_global = Fed_Dis(nodew, w_local_all, data_size_local_all, w_global, datalength)
+
+
             if True in np.isnan(w_global):
                     w_global = w_global_prev
                     last_is_nan = True
@@ -136,6 +169,7 @@ for t_time in time_list:
             print(actual_times,total_time,max_local_time)
             if actual_times >= total_time:
                 is_last_round = True
+                print("this is the end parameters: ",actual_times, total_time, max_local_time)
 
 
         w_eval = w_global
@@ -144,9 +178,11 @@ for t_time in time_list:
         redf = pd.DataFrame(columns=["method", "n_nodes", "total_time", "minibatch", "iter_times", "tau", "loss", "accuracy"])
         redf.loc[len(redf) + 1] = [aggre_type, n_nodes, total_time, minibatch, iter_times, tau, loss_final,
                                    accuracy_final]
-        redf.to_csv(gl.PATH + 'case_3.csv', mode='a', header=False)
-        redf.to_csv(gl.PATH + "tau/" + case_type + "_" + aggre_type + "_" + model_name + '_tau.csv', mode='a',
-                    header=False)
+        #redf.to_csv(gl.PATH + 'case_3.csv', mode='a', header=False)
+        #redf.to_csv(gl.PATH + "tau/" + case_type + "_" + aggre_type + "_" + model_name + '_tau.csv', mode='a',
+        #            header=False)
+        timepath = gl.PATH + csvtype + "/" +mo_name+ case_type + "_" + aggre_type + "_" + model_name + '_' + csvtype + '.csv'
+        redf.to_csv(timepath, mode='a', header=False)
 
         print("------------------------------------------------end", str(t),"experiments-------------------------------------------------------------")
     #redf.to_csv(gl.PATH + "tau/" + case_type + "_" + aggre_type + "_" + model_name + '_tau.csv', mode='a',header=False)

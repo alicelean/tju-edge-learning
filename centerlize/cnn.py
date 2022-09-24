@@ -6,6 +6,11 @@ from models.get_model import get_model
 from statistic.collect_stat import CollectStatistics
 from util.sampling import MinibatchSampling
 from config import *
+from util.aggregator import *
+from config import *
+from plot.methods import *
+from util.tools import *
+from util.utils import *
 # model 是svm
 # dataset = 'MNIST_ORIG_EVEN_ODD'  # Use for SVM model
 # model_name = 'ModelSVMSmooth'
@@ -15,21 +20,27 @@ from config import *
 dataset = 'MNIST_ORIG_ALL_LABELS'  # Use for CNN model
 model_name = 'ModelCNNMnist'
 control_param_phi = 0.00005   # Good for CNN
-
-model = get_model(model_name)
-if hasattr(model, 'create_graph'):
-    model.create_graph(learning_rate=step_size)
-
+model = createmodel(model_name, step_size)
+n_nodes = 5
+case_type="case1"
+aggre_type="avg"
+minibatch = 3
+max_time=50
 if time_gen is not None:
     use_fixed_averaging_slots = True
 else:
     use_fixed_averaging_slots = False
+# 读取数据
+train_image, train_label, test_image, test_label, train_label_orig = get_minist_data(dataset, total_data,
+                                                                                     dataset_file_path)
+# indices_each_node = get_case_1(n_nodes, train_label_orig)
+if case_type == "case1":
+    indices_each_node = get_case_1(n_nodes, train_label_orig)
+elif case_type == "case2":
+    indices_each_node = get_case_2(n_nodes, train_label_orig)
+elif case_type == "case3":
+    indices_each_node = get_case_3(n_nodes, train_label_orig)
 
-
-
-
-train_image, train_label, test_image, test_label, train_label_orig = get_data(dataset, total_data,
-                                                                                      dataset_file_path)
 sampler = MinibatchSampling(np.array(range(0, len(train_label))), batch_size, 0)
 dim_w = model.get_weight_dimension(train_image, train_label)
 w_init = model.get_init_weight(dim_w, rand_seed=0)
@@ -67,13 +78,13 @@ while True:
     else:
         it_each_local = max(0.00000001, time_one_iteration_all)
 
-        # Compute number of iterations is current slot
+    # Compute number of iterations is current slot
     total_time_recomputed += it_each_local
 
-        # Compute time in current slot
+    # Compute time in current slot
     total_time += time_total_all
-
-         # Check remaining resource budget, stop if exceeding resource budget
+    print("it_each_local", it_each_local, "max_time", max_time, "total_time_recomputed",total_time_recomputed)
+    # Check remaining resource budget, stop if exceeding resource budget
     if total_time_recomputed >= max_time:
         break
 

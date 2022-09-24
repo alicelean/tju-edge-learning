@@ -72,7 +72,7 @@ try:
                 if not last_is_nan:
                     w_local_prev = w_local
             #计算准确率
-            accuracy_local = model.accuracy(train_image, train_label, w_local)
+            accuracy_local = model.svm_accuracy(train_image, train_label, w_local)
             time_local_end = time.time()
             time_local = time_local_end - time_local_start
             msg = ['MSG_WEIGHT_TIME_SIZE_CLIENT_TO_SERVER', w_local, time_local, tau_actual, data_size_local]

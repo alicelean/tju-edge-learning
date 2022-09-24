@@ -36,12 +36,14 @@ class ModelSVMSmooth:
         val = self.lam * w + val / len(sampleIndices)
         return val
 
-    def loss(self, imgs, labels, w, sample_indices = None):
+    def svm_loss(self, imgs, labels, w, sample_indices = None):
         val = 0
         if sample_indices is None:
             sample_indices = range(0, len(labels))
 
         for i in sample_indices:
+            # print(labels[i])
+            # print(imgs[i])
             val = val + pow(max(0.0, 1 - labels[i] * np.inner(w, imgs[i])), 2)
 
         val = 0.5 * self.lam * pow(linalg.norm(w), 2) + 0.5 * val / len(sample_indices)
@@ -59,7 +61,7 @@ class ModelSVMSmooth:
         val = 0.5 * self.lam * pow(linalg.norm(self.w), 2) + 0.5 * val / len(self.inner_prod_times_label)
         return val
 
-    def accuracy(self, imgs, labels, w):
+    def svm_accuracy(self, imgs, labels, w):
         val = 0
         for i in range(1, len(labels)):
             if labels[i] * np.inner(w, imgs[i]) > 0:

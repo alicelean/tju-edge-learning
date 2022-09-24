@@ -1,5 +1,28 @@
 import numpy as np
+import scipy.stats
 from scipy.spatial.distance import pdist
+def KL_divergence(p,q):
+    '''
+    KL散度越小，越小越相似
+    :param p:np.asarray
+    :param q:np.asarray
+    :return:
+    '''
+    return scipy.stats.entropy(p, q, base=2)
+
+def JS_divergence(p,q):
+    '''
+    JS散度
+    :param p:np.asarray
+    :param q:np.asarray
+    :return:
+    '''
+    p=np.asarray(p)
+    q=np.asarray(q)
+    M=(p+q)/2
+    dis=0.5*scipy.stats.entropy(p, M, base=2)+0.5*scipy.stats.entropy(q, M, base=2)
+    print("dis vector is :",dis)
+    return dis
 
 #方法一：根据公式求解
 def Euc_distance(x,y):
@@ -100,6 +123,10 @@ def alldistance(y_list,Y,dis_type=None):
             dis = Mik_distance(y_list, Y)
         elif dis_type == 'Mab':
             dis = Mab_distance(y_list, Y)
+        elif dis_type == 'Kl':
+            dis = KL_divergence(y_list, Y)
+        elif dis_type == 'Js':
+            dis = JS_divergence(y_list, Y)
     else:
         dis = Euc_distance(y_list, Y)
     return dis

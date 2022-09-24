@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.stats
 import numpy as np
-import cv
 def KL_divergence(p,q):
     '''
     KL散度越小，越小越相似

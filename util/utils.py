@@ -138,7 +138,7 @@ def get_case_1(n_nodes, label_list):
     for node_i in range(0, n_nodes):
         print("node",node_i," data len is :",len(case[node_i]))
         df.loc[len(df)+1]=[node_i,len(case[node_i])]
-    df.to_csv(gl.PATH+"datacas1.csv")
+    df.to_csv(gl.PATH+"casenum/"+"case1.csv")
     return case
 
 
@@ -151,6 +151,7 @@ def get_case_2(n_nodes, label_list):
     '''
     case= []
     #初始化
+    df = pd.DataFrame(columns=["node_i", "datalength"])
     for i in range(0, n_nodes):
         case.append([])
 
@@ -161,6 +162,11 @@ def get_case_2(n_nodes, label_list):
             case[1].append(i)
         else:
             case[(i % n_nodes)].append(i)
+    for node_i in range(0, n_nodes):
+        print("node", node_i, " data len is :", len(case[node_i]))
+        df.loc[len(df) + 1] = [node_i, len(case[node_i])]
+        # print(df)
+    df.to_csv(gl.PATH +"casenum/"+ "case2.csv")
     return case
 
 
@@ -193,5 +199,126 @@ def get_case_3(n_nodes, label_list):
         print("node",node_i," data len is :",len(case[node_i]))
         df.loc[len(df)+1]=[node_i,len(case[node_i])]
     #print(df)
-    df.to_csv(gl.PATH+"datacase3.csv")
+    df.to_csv(gl.PATH+"casenum/"+"case3.csv")
     return case
+
+
+# def get_case_4(n_nodes, label_list):
+#     '''
+#    有偏的放置数据
+#     :param n_nodes:
+#     :param label_list:
+#     :return:
+#     '''
+#     case = []
+#     df=pd.DataFrame(columns=["node_i","datalength"])
+#     #初始化case
+#     for i in range(0, n_nodes):
+#         case.append([])
+#     num=0
+#     # 将数据扩大三倍，
+#     for i in range(0, len(label_list)):
+#         node_i=4
+#         if label_list[i] == 6:
+#             node_i=0
+#         elif label_list[i] == 0 :
+#             node_i = 1
+#         elif  label_list[i] == 9:
+#             node_i = 2
+#         elif label_list[i] == 4:
+#             node_i = 3
+#         case[node_i].append(i)
+#
+#     for node_i in range(0, n_nodes):
+#         print("node",node_i," data len is :",len(case[node_i]))
+#         df.loc[len(df)+1]=[node_i,len(case[node_i])]
+#     #print(df)
+#     df.to_csv(gl.PATH+"casenum/"+"case4.csv")
+#     return case
+
+def get_case_4(n_nodes, label_list):
+    '''
+   有偏的放置数据
+    :param n_nodes:
+    :param label_list:
+    :return:
+    '''
+    case = []
+    df=pd.DataFrame(columns=["node_i","datalength"])
+    # 初始化case
+    for i in range(0, n_nodes):
+        case.append([])
+    num = 0
+    for i in range(0, len(label_list)):
+        node_i = 4
+        if label_list[i] == 2 or label_list[i] == 6:
+            if i < 2000:
+                node_i = 0
+            else:
+                node_i = 1
+        elif label_list[i] == 0 or label_list[i] == 1:
+            if i < 2000:
+                node_i = 2
+            else:
+                node_i = 3
+        elif label_list[i] == 7 or label_list[i] == 9:
+            node_i = 3
+        else:
+            node_i = i % n_nodes
+        case[node_i].append(i)
+
+    for node_i in range(0, n_nodes):
+        print("node",node_i," data len is :",len(case[node_i]))
+        df.loc[len(df)+1]=[node_i,len(case[node_i])]
+    #print(df)
+    df.to_csv(gl.PATH+"casenum/"+"case4.csv")
+    return case
+
+def get_case_5(n_nodes, label_list):
+    '''
+   有偏的放置数据
+    :param n_nodes:
+    :param label_list:
+    :return:
+    '''
+    case = []
+    df=pd.DataFrame(columns=["node_i","datalength"])
+    #初始化case
+    for i in range(0, n_nodes):
+        case.append([])
+    num=0
+    for i in range(0, len(label_list)):
+        node_i=4
+
+        if label_list[i] == 0 or label_list[i] == 1:
+            if i < 2000:
+                node_i=0
+            else:
+                node_i = 1
+        elif label_list[i] == 2 or label_list[i] == 3:
+            if i < 2000:
+                node_i = 0
+            else:
+                node_i = 1
+        elif label_list[i] == 4 or label_list[i] == 5:
+                node_i = 2
+        elif label_list[i] == 6 or label_list[i] == 7:
+            if i < 1000:
+                node_i = 3
+            else:
+                node_i = 4
+        elif label_list[i] == 8 or label_list[i] == 9:
+            if i < 1000:
+                node_i = 2
+            else:
+                node_i = 4
+        case[node_i].append(i)
+
+    for node_i in range(0, n_nodes):
+        print("node",node_i," data len is :",len(case[node_i]))
+        df.loc[len(df)+1]=[node_i,len(case[node_i])]
+    #print(df)
+    df.to_csv(gl.PATH+"casenum/"+"case5.csv")
+    return case
+
+
